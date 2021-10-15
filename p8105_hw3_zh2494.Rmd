@@ -1,0 +1,40 @@
+---
+title: "p8105_hw3_zh2494"
+author: "zhuolun"
+date: "10/15/2021"
+output: github_document
+---
+
+```{r}
+library(p8105.datasets)
+library(tidyverse)
+library(dplyr)
+data("instacart")
+```
+
+# question 1 
+```{r}
+summary(instacart)
+size_sum(instacart)
+structure(instacart)
+colnames(instacart)
+## giving illstrative examples of observations. 
+```
+
+# How many aisles are there, and which aisles are the most items ordered from?
+
+```{r}
+
+instacart %>% 
+  group_by(aisle) %>% 
+  summarize(n_obs = n()) %>% 
+  mutate(
+    nobs_ranking = min_rank(desc(n_obs)),
+    nobs_ranking = as.integer(nobs_ranking)) %>% 
+  filter(nobs_ranking == 1)
+```
+
+* they are `134` aisles, the `fresh vegetables aisles` are the most items ordered. 
+
+
+
