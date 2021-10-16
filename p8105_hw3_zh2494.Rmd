@@ -9,19 +9,41 @@ output: github_document
 library(p8105.datasets)
 library(tidyverse)
 library(dplyr)
-data("instacart")
+
+knitr::opts_chunk$set(
+  fig.width = 6,
+  fig.asp = .6,
+  out.width = "90%"
+)
+
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
 ```
 
 # question 1 
 ```{r}
+data("instacart")
 summary(instacart)
 size_sum(instacart)
 structure(instacart)
 colnames(instacart)
+
 ## giving illstrative examples of observations. 
 ```
 
 # How many aisles are there, and which aisles are the most items ordered from?
+```{r}
+instacart %>%
+  count(aisle) %>%
+  arrange(desc(n))
+```
 
 ```{r}
 
@@ -36,5 +58,30 @@ instacart %>%
 
 * they are `134` aisles, the `fresh vegetables aisles` are the most items ordered. 
 
+# Make a plot that shows the number of items ordered in each aisle, limiting this to aisles with more than 10000 items ordered. Arrange aisles sensibly, and organize your plot so others can read it.
 
+```{r}
+instacart %>%
+  count(aisle) %>%
+  filter(n >= 10000) %>% 
+  mutate(
+    aisle = factor(aisle),
+    aisle = fct_reorder(aisle,n)
+  ) %>%  
+  ggplot(aes(y = n, x = aisle)) +
+  geom_point() +
+  labs(
+    title = "aisles with more than 10000 items ordered",
+    x = "the number of items",
+    y = "the name of the aisle"
+  ) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+
+```
+
+# Make a table showing the three most popular items in each of the aisles “baking ingredients”, “dog food care”, and “packaged vegetables fruits”. Include the number of times each item is ordered in your table.
+
+```{r}
+
+```
 
