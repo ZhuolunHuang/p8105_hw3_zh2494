@@ -27,7 +27,7 @@ scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 ```
 
-# question 1 
+# Problem 1 
 ```{r}
 data("instacart")
 summary(instacart)
@@ -38,7 +38,7 @@ colnames(instacart)
 ## giving illstrative examples of observations. 
 ```
 
-# How many aisles are there, and which aisles are the most items ordered from?
+## How many aisles are there, and which aisles are the most items ordered from?
 ```{r}
 instacart %>%
   count(aisle) %>%
@@ -56,9 +56,9 @@ instacart %>%
   filter(nobs_ranking == 1)
 ```
 
-* they are `134` aisles, the `fresh vegetables aisles` are the most items ordered. 
+*comment: they are `134` aisles, the `fresh vegetables aisles` are the most items ordered.* 
 
-# Make a plot that shows the number of items ordered in each aisle, limiting this to aisles with more than 10000 items ordered. Arrange aisles sensibly, and organize your plot so others can read it.
+## Make a plot that shows the number of items ordered in each aisle, limiting this to aisles with more than 10000 items ordered. Arrange aisles sensibly, and organize your plot so others can read it.
 
 ```{r}
 instacart %>%
@@ -79,7 +79,7 @@ instacart %>%
 
 ```
 
-# Make a table showing the three most popular items in each of the aisles “baking ingredients”, “dog food care”, and “packaged vegetables fruits”. Include the number of times each item is ordered in your table.
+## Make a table showing the three most popular items in each of the aisles “baking ingredients”, “dog food care”, and “packaged vegetables fruits”. Include the number of times each item is ordered in your table.
 
 ```{r}
 instacart %>% 
@@ -92,9 +92,9 @@ instacart %>%
   knitr::kable()
 ```
 
-* the baking ingredients need the most light brown sugar. Dog food care need Snack Sticks Chicken & Rice Recipe Dog Treats and packaged vegetables fruits need the most Organic Baby Spinach.
+*comment:the baking ingredients need the most light brown sugar. Dog food care need Snack Sticks Chicken & Rice Recipe Dog Treats and packaged vegetables fruits need the most Organic Baby Spinach.*
 
-# Make a table showing the mean hour of the day at which Pink Lady Apples and Coffee Ice Cream are ordered on each day of the week; format this table for human readers (i.e. produce a 2 x 7 table).
+## Make a table showing the mean hour of the day at which Pink Lady Apples and Coffee Ice Cream are ordered on each day of the week; format this table for human readers (i.e. produce a 2 x 7 table).
 
 ```{r}
 instacart %>% 
@@ -108,3 +108,78 @@ instacart %>%
   )
 ```
 
+# Problem 2
+```{r}
+data("brfss_smart2010")
+```
+
+```{r}
+Brfss = 
+  brfss_smart2010 %>% 
+  filter(Topic == "Overall Health") %>%
+  filter(Response %in% c("Excellent","Very good","Good","Fair","Poor")) %>%
+  mutate(
+    Response = forcats::fct_relevel(Response,c("Poor","Fair","Good","Very good","Excellent")),
+    Response = as.factor(Response))
+```
+
+## In 2002, which states were observed at 7 or more locations? What about in 2010?
+
+```{r}
+location_2002 = 
+  Brfss %>% 
+  filter(Year == 2002) %>% 
+  group_by(Locationabbr,Locationdesc) %>%
+  summarize(
+    n = n(),
+  ) %>% 
+  count(Locationabbr) %>% 
+  filter(n >= 7)
+view(location_2002)
+
+location_2010 =
+  Brfss %>% 
+  filter(Year == 2010) %>% 
+  group_by(Locationabbr,Locationdesc) %>%
+  summarize(
+    n = n(),
+  ) %>% 
+  count(Locationabbr) %>% 
+  filter(n >= 7)
+view(location_2010)
+
+```
+
+*comment: the states that were observed at 7 or more locations are`r pull(location_2002,Locationabbr)` in 2002, the states that were observed at 7 or more locations are`r pull(location_2010,Locationabbr)` in 2010*
+
+## Construct a dataset that is limited to Excellent responses, and contains, year, state, and a variable that averages the data_value across locations within a state. Make a “spaghetti” plot of this average value over time within a state (that is, make a plot showing a line for each state across years – the geom_line geometry and group aesthetic will help).
+
+```{r}
+Excellent_df = 
+  Brfss %>% 
+  filter(Response == 1) %>% 
+  group_by(Year, Locationabbr) %>% 
+  summarise(
+    mean_data_value = mean(Data_value, na.rm = TRUE)
+  )
+ggplot(Excellent_df, aes(x = Year, y = mean_data_value, color = Locationabbr)) + geom_point() + geom_line()
+#  pivot_wider(
+#    names_from = Year,
+#    values_from = mean_data_value)
+#view(Excellent_df)
+
+```
+
+**comment: **
+
+## Make a two-panel plot showing, for the years 2006, and 2010, distribution of data_value for responses (“Poor” to “Excellent”) among locations in NY State.
+
+```{r}
+two_panel_plot = 
+  Brfss %>% 
+  filter(Year %in% c(2006,2010),
+         Locationabbr == "NY")
+ggplot(two_panel_plot, aes(y = Data_value, x = Response)) + geom_point() + geom_boxplot() + facet_grid(. ~ Year)
+```
+
+**comment: **
