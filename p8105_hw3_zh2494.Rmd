@@ -38,7 +38,7 @@ colnames(instacart)
 ## giving illstrative examples of observations. 
 ```
 
-## How many aisles are there, and which aisles are the most items ordered from?
+##### How many aisles are there, and which aisles are the most items ordered from?
 ```{r}
 instacart %>%
   count(aisle) %>%
@@ -58,7 +58,7 @@ instacart %>%
 
 *comment: they are `134` aisles, the `fresh vegetables aisles` are the most items ordered.* 
 
-## Make a plot that shows the number of items ordered in each aisle, limiting this to aisles with more than 10000 items ordered. Arrange aisles sensibly, and organize your plot so others can read it.
+##### Make a plot that shows the number of items ordered in each aisle, limiting this to aisles with more than 10000 items ordered. Arrange aisles sensibly, and organize your plot so others can read it.
 
 ```{r}
 instacart %>%
@@ -79,7 +79,7 @@ instacart %>%
 
 ```
 
-## Make a table showing the three most popular items in each of the aisles “baking ingredients”, “dog food care”, and “packaged vegetables fruits”. Include the number of times each item is ordered in your table.
+##### Make a table showing the three most popular items in each of the aisles “baking ingredients”, “dog food care”, and “packaged vegetables fruits”. Include the number of times each item is ordered in your table.
 
 ```{r}
 instacart %>% 
@@ -94,7 +94,7 @@ instacart %>%
 
 *comment:the baking ingredients need the most light brown sugar. Dog food care need Snack Sticks Chicken & Rice Recipe Dog Treats and packaged vegetables fruits need the most Organic Baby Spinach.*
 
-## Make a table showing the mean hour of the day at which Pink Lady Apples and Coffee Ice Cream are ordered on each day of the week; format this table for human readers (i.e. produce a 2 x 7 table).
+##### Make a table showing the mean hour of the day at which Pink Lady Apples and Coffee Ice Cream are ordered on each day of the week; format this table for human readers (i.e. produce a 2 x 7 table).
 
 ```{r}
 instacart %>% 
@@ -123,7 +123,7 @@ Brfss =
     Response = as.factor(Response))
 ```
 
-## In 2002, which states were observed at 7 or more locations? What about in 2010?
+##### In 2002, which states were observed at 7 or more locations? What about in 2010?
 
 ```{r}
 location_2002 = 
@@ -152,27 +152,24 @@ view(location_2010)
 
 *comment: the states that were observed at 7 or more locations are`r pull(location_2002,Locationabbr)` in 2002, the states that were observed at 7 or more locations are`r pull(location_2010,Locationabbr)` in 2010*
 
-## Construct a dataset that is limited to Excellent responses, and contains, year, state, and a variable that averages the data_value across locations within a state. Make a “spaghetti” plot of this average value over time within a state (that is, make a plot showing a line for each state across years – the geom_line geometry and group aesthetic will help).
+##### Construct a dataset that is limited to Excellent responses, and contains, year, state, and a variable that averages the data_value across locations within a state. Make a “spaghetti” plot of this average value over time within a state (that is, make a plot showing a line for each state across years – the geom_line geometry and group aesthetic will help).
 
 ```{r}
-Excellent_df = 
-  Brfss %>% 
-  filter(Response == 1) %>% 
+Brfss %>%
+  filter(Response == "Excellent") %>% 
   group_by(Year, Locationabbr) %>% 
   summarise(
     mean_data_value = mean(Data_value, na.rm = TRUE)
-  )
-ggplot(Excellent_df, aes(x = Year, y = mean_data_value, color = Locationabbr)) + geom_point() + geom_line()
-#  pivot_wider(
-#    names_from = Year,
-#    values_from = mean_data_value)
-#view(Excellent_df)
-
+  ) %>% 
+  ggplot(aes(x = Year, y = mean_data_value, color = Locationabbr)) + 
+  geom_point() + 
+  geom_line() +
+  theme(legend.position = "right")
 ```
 
 **comment: **
 
-## Make a two-panel plot showing, for the years 2006, and 2010, distribution of data_value for responses (“Poor” to “Excellent”) among locations in NY State.
+##### Make a two-panel plot showing, for the years 2006, and 2010, distribution of data_value for responses (“Poor” to “Excellent”) among locations in NY State.
 
 ```{r}
 two_panel_plot = 
@@ -186,7 +183,7 @@ ggplot(two_panel_plot, aes(y = Data_value, x = Response)) + geom_point() + geom_
 
 # Problem 3
 
-##Load, tidy, and otherwise wrangle the data. Your final dataset should include all originally observed variables and values; have useful variable names; include a weekday vs weekend variable; and encode data with reasonable variable classes. Describe the resulting dataset (e.g. what variables exist, how many observations, etc).
+##### Load, tidy, and otherwise wrangle the data. Your final dataset should include all originally observed variables and values; have useful variable names; include a weekday vs weekend variable; and encode data with reasonable variable classes. Describe the resulting dataset (e.g. what variables exist, how many observations, etc).
 
 ```{r}
 accel = 
@@ -201,10 +198,10 @@ accel =
    
 ```
 
-#Traditional analyses of accelerometer data focus on the total activity over the day. Using your tidied dataset, aggregate accross minutes to create a total activity variable for each day, and create a table showing these totals. Are any trends apparent?
+##### Traditional analyses of accelerometer data focus on the total activity over the day. Using your tidied dataset, aggregate accross minutes to create a total activity variable for each day, and create a table showing these totals. Are any trends apparent?
 
 ```{r}
-  accel %>% 
+accel %>% 
   pivot_longer(
     activity.1:activity.1440,
     names_to = "time",
@@ -217,7 +214,7 @@ accel =
 
 ```
 
-#Accelerometer data allows the inspection activity over the course of the day. Make a single-panel plot that shows the 24-hour activity time courses for each day and use color to indicate day of the week. Describe in words any patterns or conclusions you can make based on this graph.
+##### Accelerometer data allows the inspection activity over the course of the day. Make a single-panel plot that shows the 24-hour activity time courses for each day and use color to indicate day of the week. Describe in words any patterns or conclusions you can make based on this graph.
 
 ```{r}
 accel %>% 
