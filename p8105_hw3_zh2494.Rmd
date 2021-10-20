@@ -12,7 +12,7 @@ library(dplyr)
 
 knitr::opts_chunk$set(
   fig.width = 6,
-  fig.asp = .6,
+  fig.asp = 1.0,
   out.width = "90%"
 )
 
@@ -86,13 +86,13 @@ instacart %>%
   ) %>%  
   ggplot(aes(y = n, x = aisle)) +
   geom_bar(aes(fill = aisle), stat = "identity") +
+  coord_flip()
   labs(
     title = "aisles with more than 10000 items ordered",
     x = "the number of items",
     y = "the name of the aisle"
   ) +
-  scale_x_discrete(labels = NULL)
-  #theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 ```
 
 *comment : The bar diagram above showed the number of items ordered in aisles, which had more than 10000 items ordered.*
